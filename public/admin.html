@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Steelburg Chat</title>
+    <link rel="stylesheet" href="/admin.css">
+</head>
+
+<body>
+
+    <div id="admin-container">
+        <h2>Steelburg Admin Panel</h2>
+
+        <input type="text" id="adminKey" placeholder="Admin Key">
+        <input type="text" id="name" placeholder="User Full Name">
+        <input type="text" id="phone" placeholder="Phone Number">
+        <input type="password" id="password" placeholder="Password">
+
+        <button id="add-btn">Add User</button>
+
+        <p id="status" style="margin-top:10px;"></p>
+    </div>
+
+    <script>
+        document.getElementById("add-btn").addEventListener("click", async () => {
+            const adminKey = document.getElementById("adminKey").value.trim();
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const res = await fetch("/admin/add-user", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ adminKey, name, phone, password })
+            });
+
+            const data = await res.json();
+
+            const status = document.getElementById("status");
+
+            if (!data.success) {
+                status.style.color = "red";
+                status.textContent = data.message;
+                return;
+            }
+
+            status.style.color = "green";
+            status.textContent = "User added successfully!";
+        });
+    </script>
+
+</body>
+</html>
