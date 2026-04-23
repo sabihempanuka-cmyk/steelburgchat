@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Steelburg Chat</title>
+    <link rel="stylesheet" href="/login.css">
+</head>
+
+<body>
+
+    <div id="login-container">
+        <h2>Steelburg Chat Login</h2>
+
+        <input type="text" id="phone" placeholder="Phone number">
+        <input type="password" id="password" placeholder="Password">
+
+        <button id="login-btn">Login</button>
+
+        <p id="error" style="color:red; display:none;">Invalid login</p>
+    </div>
+
+    <script>
+        document.getElementById("login-btn").addEventListener("click", async () => {
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const res = await fetch("/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone, password })
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+                document.getElementById("error").style.display = "block";
+                return;
+            }
+
+            // Save user name in browser
+            localStorage.setItem("username", data.name);
+
+            // Redirect to chat
+            window.location.href = "/chat.html";
+        });
+    </script>
+
+</body>
+</html>
